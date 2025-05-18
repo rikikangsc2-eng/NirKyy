@@ -16,6 +16,24 @@
   ],
   "fitur": [
     {
+  "nama": "AI Image Upscaler",
+  "tags": ["Image", "Utility", "AI"],
+  "endpoint": "/api/v1/ai-upscale",
+  "deskripsi": "Meningkatkan resolusi gambar menggunakan AI berdasarkan URL yang diberikan.",
+  "parameter": [
+    {
+      "params": "url",
+      "example": "https://nirkyy.koyeb.app/example.jpg",
+      "opsional": false
+    },
+    {
+      "params": "scale",
+      "example": "4",
+      "opsional": true
+    }
+  ]
+},
+    {
   "nama": "Image Uploader to imgBB",
   "tags": ["Image", "Utility"],
   "endpoint": "/api/v1/toimgbb",
