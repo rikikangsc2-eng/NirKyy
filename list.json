@@ -16,6 +16,24 @@
   ],
   "fitur": [
     {
+  "nama": "Writecream Gemini Chat",
+  "tags": ["AI", "Utility"],
+  "endpoint": "/api/v1/writecream-gemini",
+  "deskripsi": "Berinteraksi dengan model AI (Gemini) menggunakan parameter system dan query.",
+  "parameter": [
+    {
+      "params": "system",
+      "example": "Anda adalah asisten AI yang membantu.",
+      "opsional": false
+    },
+    {
+      "params": "query",
+      "example": "Apa itu AI?",
+      "opsional": false
+    }
+  ]
+},
+    {
   "nama": "AI Image Upscaler",
   "tags": ["Image", "Utility", "AI"],
   "endpoint": "/api/v1/ai-upscale",
