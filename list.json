@@ -15,6 +15,29 @@
     "Social"
   ],
   "fitur": [
+      {
+  "nama": "DeepSeek V3",
+  "tags": ["AI", "Utility"],
+  "endpoint": "/api/v1/gemmachat",
+  "deskripsi": "\"kenapa endpoint nya /gemmachat ?\", Ya tadinya gemma-3-27b namun sekarang di ubah ke Deepseek",
+  "parameter": [
+    {
+      "params": "user",
+      "example": "pengguna123",
+      "opsional": false
+    },
+    {
+      "params": "system",
+      "example": "kamu adalah asisten AI yang membantu.",
+      "opsional": false
+    },
+    {
+      "params": "prompt",
+      "example": "Halo, apa kabar?",
+      "opsional": false
+    }
+  ]
+},
     {
   "nama": "Writecream Gemini Chat",
   "tags": ["AI", "Utility"],
@@ -406,29 +429,6 @@
     {
       "params": "type",
       "example": "waifu",
-      "opsional": false
-    }
-  ]
-},
-    {
-  "nama": "gemma-3-27b-it",
-  "tags": ["AI", "Utility"],
-  "endpoint": "/api/v1/gemmachat",
-  "deskripsi": "Bukan Lagi Gemma-3-27b melainkan Deepseek V3",
-  "parameter": [
-    {
-      "params": "user",
-      "example": "pengguna123",
-      "opsional": false
-    },
-    {
-      "params": "system",
-      "example": "kamu adalah asisten AI yang membantu.",
-      "opsional": false
-    },
-    {
-      "params": "prompt",
-      "example": "Halo, apa kabar?",
       "opsional": false
     }
   ]
