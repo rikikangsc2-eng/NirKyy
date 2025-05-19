@@ -414,7 +414,7 @@
   "nama": "gemma-3-27b-it",
   "tags": ["AI", "Utility"],
   "endpoint": "/api/v1/gemmachat",
-  "deskripsi": "Berinteraksi dengan model AI Gemma.",
+  "deskripsi": "Bukan Lagi Gemma-3-27b melainkan Deepseek V3",
   "parameter": [
     {
       "params": "user",
