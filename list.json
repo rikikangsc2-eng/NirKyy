@@ -15,6 +15,13 @@
     "Social"
   ],
   "fitur": [
+    {
+  "nama": "Captcha Generator",
+  "tags": ["Generator", "Image"],
+  "endpoint": "/api/v1/captcha",
+  "deskripsi": "Menghasilkan token CAPTCHA acak dan URL gambar CAPTCHA.",
+  "parameter": []
+},
       {
   "nama": "DeepSeek V3",
   "tags": ["AI", "Utility"],
