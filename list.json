@@ -16,6 +16,19 @@
   ],
   "fitur": [
     {
+  "nama": "Bratnime Image Generator",
+  "tags": ["Image", "Generator"],
+  "endpoint": "/api/v1/bratnime",
+  "deskripsi": "Menghasilkan gambar gaya Bratnime dengan teks kustom.",
+  "parameter": [
+    {
+      "params": "text",
+      "example": "Awas cuy bang Puruu Puruu suka ngutang :v",
+      "opsional": false
+    }
+  ]
+},
+    {
   "nama": "Captcha Generator",
   "tags": ["Generator", "Image"],
   "endpoint": "/api/v1/captcha",
