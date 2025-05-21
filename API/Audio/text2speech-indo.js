@@ -22,7 +22,7 @@ module.exports = async (req, res) => {
     const voiceData = voices[voice];
 
     if (!voiceData) {
-      return res.errorJson('Voice tidak valid', 400);
+      return res.errorJson({message:"Voice tidak valid", voices}, 400);
     }
 
     const payload = new URLSearchParams({
