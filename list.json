@@ -16,6 +16,19 @@
   ],
   "fitur": [
     {
+  "nama": "Bochil Windah Check",
+  "tags": ["Image", "Fun"],
+  "endpoint": "/api/v1/bochil",
+  "deskripsi": "Cek Dulu cill, ha meh meh",
+  "parameter": [
+    {
+      "params": "nama",
+      "example": "puruupuruu",
+      "opsional": false
+    }
+  ]
+},
+    {
   "nama": "HTML to Image Converter",
   "tags": ["Image", "Converter"],
   "endpoint": "/api/v1/html-2-image",
