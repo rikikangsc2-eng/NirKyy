@@ -16,6 +16,24 @@
   ],
   "fitur": [
     {
+  "nama": "Web Screenshot",
+  "tags": ["Image", "Utility"],
+  "endpoint": "/api/v1/ssweb",
+  "deskripsi": "Mengambil tangkapan layar (screenshot) dari halaman web dalam format desktop atau seluler.",
+  "parameter": [
+    {
+      "params": "url",
+      "example": "https://nirkyy.koyeb.app",
+      "opsional": false
+    },
+    {
+      "params": "type",
+      "example": "desktop / phone",
+      "opsional": true
+    }
+  ]
+},
+    {
   "nama": "Bratnime Image Generator",
   "tags": ["Image", "Generator"],
   "endpoint": "/api/v1/bratnime",
@@ -223,44 +241,6 @@
       "params": "url",
       "example": "https://www.facebook.com/reel/1190968028860806/?mibextid=rS40aB7S9Ucbxw6v",
       "opsional": false
-    }
-  ]
-},
-    {
-  "nama": "Website Screenshot",
-  "tags": ["Image", "Utility"],
-  "endpoint": "/api/v1/ssweb",
-  "deskripsi": "Mengambil screenshot dari sebuah website berdasarkan URL.",
-  "parameter": [
-    {
-      "params": "url",
-      "example": "https://nirkyy.koyeb.app",
-      "opsional": false
-    },
-    {
-      "params": "browserWidth",
-      "example": "1280",
-      "opsional": true
-    },
-    {
-      "params": "browserHeight",
-      "example": "720",
-      "opsional": true
-    },
-    {
-      "params": "fullPage",
-      "example": "false",
-      "opsional": true
-    },
-    {
-      "params": "deviceScaleFactor",
-      "example": "1",
-      "opsional": true
-    },
-    {
-      "params": "format",
-      "example": "png",
-      "opsional": true
     }
   ]
 },
