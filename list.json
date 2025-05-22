@@ -23,7 +23,7 @@
   "parameter": [
     {
       "params": "html",
-      "example": "%3C%21DOCTYPE%20html%3E%0A%3Chtml%20lang%3D%22id%22%3E%0A%3Chead%3E%0A%20%20%20%20%3Cmeta%20charset%3D%22UTF-8%22%3E%0A%20%20%20%20%3Cmeta%20name%3D%22viewport%22%20content%3D%22width%3Ddevice-width%2C%20initial-scale%3D1.0%22%3E%0A%20%20%20%20%3Ctitle%3EHalo%20Dunia%3C%2Ftitle%3E%0A%20%20%20%20%3Cscript%20src%3D%22https%3A%2F%2Fcdn.tailwindcss.com%22%3E%3C%2Fscript%3E%0A%20%20%20%20%3Clink%20href%3D%22https%3A%2F%2Ffonts.googleapis.com%2Fcss2%3Ffamily%3DInter%3Awght%40400%3B700%26display%3Dswap%22%20rel%3D%22stylesheet%22%3E%0A%20%20%20%20%3Cstyle%3E%0A%20%20%20%20%20%20%20%20body%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20font-family%3A%20%27Inter%27%2C%20sans-serif%3B%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%3C%2Fstyle%3E%0A%3C%2Fhead%3E%0A%3Cbody%20class%3D%22bg-gradient-to-br%20from-indigo-500%20to-purple-600%20min-h-screen%20flex%20items-center%20justify-center%20p-4%22%3E%0A%20%20%20%20%3Cdiv%20class%3D%22bg-white%20p-8%20rounded-xl%20shadow-2xl%20text-center%20max-w-sm%20w-full%20transform%20transition-all%20duration-300%20hover%3Ascale-105%22%3E%0A%20%20%20%20%20%20%20%20%3Ch1%20class%3D%22text-5xl%20font-extrabold%20text-gray-800%20mb-4%20animate-bounce%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20Halo%20Dunia%21%0A%20%20%20%20%20%20%20%20%3C%2Fh1%3E%0A%20%20%20%20%20%20%20%20%3Cp%20class%3D%22text-lg%20text-gray-600%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20Ini%20adalah%20contoh%20sederhana%20yang%20terlihat%20bagus%20di%20ponsel%20Anda.%0A%20%20%20%20%20%20%20%20%3C%2Fp%3E%0A%20%20%20%20%3C%2Fdiv%3E%0A%3C%2Fbody%3E%0A%3C%2Fhtml%3E",
+      "example": "Paste Kode HTML Nya",
       "opsional": false
     }
   ]
