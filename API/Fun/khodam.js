@@ -8,7 +8,7 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const apiUrl = `https://express-vercel-ytdl.vercel.app/khodam?nama=${encodeURIComponent(nama)}`;
+    const apiUrl = `https://nirkyy-api.hf.space/api/khodam?name=${encodeURIComponent(nama)}`;
     const response = await axios.get(apiUrl, { responseType: 'stream' });
     res.setHeader('Content-Type', 'image/jpeg');
     response.data.pipe(res);
