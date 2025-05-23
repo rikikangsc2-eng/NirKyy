@@ -16,6 +16,19 @@
   ],
   "fitur": [
     {
+  "nama": "Animegine Image Generator",
+  "tags": ["AI", "Image", "Generator"],
+  "endpoint": "/api/v1/animegine",
+  "deskripsi": "Menghasilkan gambar anime berdasarkan prompt yang diberikan.",
+  "parameter": [
+    {
+      "params": "prompt",
+      "example": "a cute anime girl with pink hair",
+      "opsional": false
+    }
+  ]
+},
+    {
   "nama": "Bochil Windah Check",
   "tags": ["Image", "Fun"],
   "endpoint": "/api/v1/bochil",
