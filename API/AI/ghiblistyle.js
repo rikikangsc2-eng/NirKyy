@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 
 module.exports = async (req, res) => {
+  return res.errorJson("Sengaja gw stop, Error lagi nyari alternatif lain bos")
   const ghibli = {
     api: {
       base: 'https://ghibli-image-generator.com',

@@ -2,6 +2,7 @@ const axios = require('axios')
 
 module.exports = async function(req, res) {
   try {
+    return res.errorJson("Sengaja gw stop, Error lagi nyari alternatif lain bos")
     const prompt = req.query.prompt
     
     if (!prompt) {
