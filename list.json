@@ -16,6 +16,19 @@
   ],
   "fitur": [
     {
+  "nama": "Brats Image Generator",
+  "tags": ["Image", "Generator", "Fun"],
+  "endpoint": "/api/v1/brat",
+  "deskripsi": "Buat gambar gaya Bratz dengan teks kustom.",
+  "parameter": [
+    {
+      "params": "text",
+      "example": "Ishh ape bende tuhh",
+      "opsional": false
+    }
+  ]
+},
+    {
   "nama": "Animegine Image Generator",
   "tags": ["AI", "Image", "Generator"],
   "endpoint": "/api/v1/animegine",
@@ -945,24 +958,6 @@
           "params": "rate",
           "example": 0,
           "opsional": true
-        }
-      ]
-    },
-    {
-      "nama": "Brats Image Generator",
-      "tags": ["Generator", "Image"],
-      "endpoint": "/api/v1/brats",
-      "deskripsi": "Buat gambar gaya Bratz dengan teks kustom.",
-      "parameter": [
-        {
-          "params": "host",
-          "example": "1",
-          "opsional": false
-        },
-        {
-          "params": "text",
-          "example": "Ishh ape bende tuhh",
-          "opsional": false
         }
       ]
     },
