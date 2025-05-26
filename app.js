@@ -200,12 +200,13 @@ app.use((req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-    console.error("Error Gak Ketangkep Nih:", err.stack || err);
-    if (req.accepts('html')) {
-        res.status(500).render('500');
-    } else {
-        res.errorJson('Internal Server Error', 500);
+    console.error('An unhandled error occurred:', err);
+    
+    if (res.headersSent) {
+        return next(err);
     }
+    
+    res.errorJson('Waw Error Kasih tau owner dung mungkin dia gak tau', 500);
 });
 
 app.listen(port, () => {
