@@ -16,6 +16,19 @@
   ],
   "fitur": [
     {
+  "nama": "Blur Face Image",
+  "tags": ["Image", "Utility", "Fun"],
+  "endpoint": "/api/v1/blurface",
+  "deskripsi": "Mengaburkan wajah pada gambar yang diberikan melalui URL.",
+  "parameter": [
+    {
+      "params": "url",
+      "example": "https://nirkyy.koyeb.app/example.jpg",
+      "opsional": false
+    }
+  ]
+},
+    {
   "nama": "Brats Image Generator",
   "tags": ["Image", "Generator", "Fun"],
   "endpoint": "/api/v1/brat",
