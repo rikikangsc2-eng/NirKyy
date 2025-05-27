@@ -16,6 +16,13 @@
   ],
   "fitur": [
     {
+  "nama": "Kalender Event",
+  "tags": ["Information", "Utility"],
+  "endpoint": "/api/v1/kalender",
+  "deskripsi": "Mendapatkan data kalender event.",
+  "parameter": []
+    },
+    {
   "nama": "Blur Face Image",
   "tags": ["Image", "Utility", "Fun"],
   "endpoint": "/api/v1/blurface",
