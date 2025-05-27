@@ -41,7 +41,7 @@ const daftarTags = dataJson.daftarTags || [];
 
 const apiLimiter = rateLimit({
     windowMs: 1 * 60 * 1000,
-    max: 20,
+    max: 50,
     message: 'Terlalu banyak permintaan, silakan coba lagi setelah beberapa menit.',
     standardHeaders: true,
     legacyHeaders: false,
@@ -276,7 +276,7 @@ app.use((err, req, res, next) => {
 });
 
 const server = app.listen(port, () => {
-    console.log(`🚀 Server berjalan di http://localhost:${port}`);
+    console.log(`🚀 Berjalan Cuyy di PORT:${port}`);
 });
 
 const gracefulShutdown = (signal) => {
