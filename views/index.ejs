@@ -111,7 +111,7 @@
 
     <div id="tryModal" class="fixed inset-0 z-40 overflow-y-auto hidden" aria-labelledby="tryModalLabel" role="dialog" aria-modal="true">
         <div class="flex items-end sm:items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div class="fixed inset-0 transition-opacity modal-backdrop" aria-hidden="true"></div>
+            <div id="tryModalBackdrop" class="fixed inset-0 transition-opacity modal-backdrop" aria-hidden="true"></div>
             <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">​</span>
             <div class="modal inline-block align-bottom bg-gray-900 rounded-lg text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-3xl w-full flex flex-col border border-gray-700">
                 <div class="bg-gray-900 px-4 pt-5 pb-4 sm:p-6 sm:pb-4 border-b border-gray-800 sticky top-0 z-10">
@@ -120,7 +120,7 @@
                         <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
                             <h3 class="text-lg leading-6 font-medium text-blue-400" id="tryModalLabel">Uji Coba Endpoint</h3>
                         </div>
-                        <button type="button" class="absolute top-4 right-4 text-gray-500 hover:text-gray-300 transition-colors" data-modal-hide="tryModal"><i class="fas fa-times text-2xl"></i></button>
+                        <button type="button" id="tryModalCloseButtonX" class="absolute top-4 right-4 text-gray-500 hover:text-gray-300 transition-colors" data-modal-hide="tryModal"><i class="fas fa-times text-2xl"></i></button>
                     </div>
                 </div>
                 <div class="px-4 py-5 sm:p-6 flex-1 overflow-y-auto space-y-6">
@@ -129,7 +129,8 @@
                     <button id="runButton" class="w-full inline-flex items-center justify-center rounded-md border border-transparent shadow-sm px-4 py-2.5 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 focus:ring-offset-gray-900 sm:text-sm transition duration-150 ease-in-out">
                         <i class="fas fa-play fa-fw mr-2 -ml-1"></i>Jalankan Permintaan
                     </button>
-                    <div id="loadingIndicator" class="text-center py-3 text-gray-500" style="display:none">
+                    <div id="requestTimerDisplay" class="text-center py-2 text-sm text-yellow-400" style="display:none;"></div>
+                    <div id="loadingIndicator" class="text-center py-3 text-gray-500 items-center justify-center" style="display:none">
                         <svg class="animate-spin inline-block h-5 w-5 text-blue-400 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -168,7 +169,10 @@
                     </div>
                 </div>
                 <div class="bg-gray-900 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse border-t border-gray-800 sticky bottom-0 z-10">
-                    <button type="button" data-modal-hide="tryModal" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-700 shadow-sm px-4 py-2 bg-gray-800 text-base font-medium text-gray-300 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 focus:ring-offset-gray-900 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm transition-colors">Tutup</button>
+                    <button type="button" id="tryModalCloseButtonFooter" data-modal-hide="tryModal" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-700 shadow-sm px-4 py-2 bg-gray-800 text-base font-medium text-gray-300 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 focus:ring-offset-gray-900 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm transition-colors">Tutup</button>
+                    <button type="button" id="stopRequestButton" class="hidden mt-3 w-full inline-flex justify-center rounded-md border border-red-700 shadow-sm px-4 py-2 bg-red-800 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 focus:ring-offset-gray-900 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm transition-colors">
+                        <i class="fas fa-stop-circle fa-fw mr-2 -ml-1"></i>Stop Permintaan
+                    </button>
                 </div>
             </div>
         </div>
@@ -207,9 +211,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            
-            //Silahkan ganti base domain sama punya MU ya
-            
             /*----------------------*/
             const BASE_DOMAIN = 'https://nirkyy.koyeb.app';
             /*----------------------*/
@@ -221,13 +222,25 @@
             let activeTag = '';
             let allAvailableTags = [];
 
+            let requestAbortController = null;
+            let requestTimerInterval = null;
+            let isTryModalRequestActive = false;
+            const REQUEST_TIMEOUT_SECONDS = 60;
+
             const sidebar = document.getElementById('sidebar');
             const sidebarOpenBtn = document.getElementById('sidebar-open');
             const sidebarCloseBtn = document.getElementById('sidebar-close');
             const endpointListSection = document.getElementById('endpointListSection');
             const searchEndpointInput = document.getElementById('searchEndpoint');
             const tagButtonsContainer = document.getElementById('tagButtons');
+            
             const tryModalElement = document.getElementById('tryModal');
+            const tryModalBackdrop = document.getElementById('tryModalBackdrop');
+            const tryModalCloseButtonX = document.getElementById('tryModalCloseButtonX');
+            const tryModalCloseButtonFooter = document.getElementById('tryModalCloseButtonFooter');
+            const stopRequestButton = document.getElementById('stopRequestButton');
+            const requestTimerDisplay = document.getElementById('requestTimerDisplay');
+
             const parameterInputsDiv = document.getElementById('parameterInputs');
             const runButton = document.getElementById('runButton');
             const responseHeaderPre = document.getElementById('responseHeader');
@@ -349,7 +362,6 @@
                         }
                     })
                     .catch(error => {
-                        console.error('Fetch error:', error);
                         let errorMessage = `Waduh, gagal muat endpoint nih. Coba lagi nanti ya. (${error.message})`;
                         if (error instanceof SyntaxError) {
                             errorMessage = `Gagal muat endpoint: Servernya ngasih data aneh, bukan JSON. (${error.message})`;
@@ -400,7 +412,6 @@
                         renderTagButtons();
                     })
                     .catch(error => {
-                        console.error("Error loading tags:", error);
                         tagButtonsContainer.innerHTML = '<div class="px-3 py-2.5 text-sm text-red-500">Gagal memuat kategori.</div>';
                     });
             }
@@ -410,13 +421,13 @@
                     modalElement.classList.remove('hidden');
                     document.body.classList.add('overflow-hidden');
                     gsap.fromTo(modalElement.querySelector('.modal-backdrop'), {opacity:0}, {opacity:1, duration:0.3});
-                    gsap.fromTo(modalElement.querySelector('.transform'), {opacity:0, scale:0.95, y:20}, {opacity:1, scale:1, y:0, duration:0.3, ease:'back.out(1.7)'});
+                    gsap.fromTo(modalElement.querySelector('.modal'), {opacity:0, scale:0.95, y:20}, {opacity:1, scale:1, y:0, duration:0.3, ease:'back.out(1.7)'});
                 }
             }
 
             function hideModal(modalElement, persistDismiss = false) {
-                if (modalElement && !modalElement.classList.contains('hidden')) {
-                    gsap.to(modalElement.querySelector('.transform'), {opacity:0, scale:0.95, y:20, duration:0.2, ease:'power1.in'});
+                 if (modalElement && !modalElement.classList.contains('hidden')) {
+                    gsap.to(modalElement.querySelector('.modal'), {opacity:0, scale:0.95, y:20, duration:0.2, ease:'power1.in'});
                     gsap.to(modalElement.querySelector('.modal-backdrop'), {opacity:0, duration:0.3, delay:0.1, onComplete: () => {
                         modalElement.classList.add('hidden');
                          if (persistDismiss && modalElement.id === 'whatsappModal') {
@@ -428,25 +439,50 @@
                     }});
                 }
             }
+            
+            function setTryModalClosable(closable) {
+                [tryModalCloseButtonX, tryModalCloseButtonFooter, tryModalBackdrop].forEach(el => {
+                    if (!el) return;
+                    el.disabled = !closable;
+                    el.classList.toggle('opacity-50', !closable);
+                    el.classList.toggle('cursor-not-allowed', !closable);
+                    if (el === tryModalBackdrop) {
+                         el.style.pointerEvents = closable ? 'auto' : 'none';
+                    }
+                });
+            }
 
             function setupModalTriggers() {
                 document.querySelectorAll('[data-modal-hide]').forEach(button => {
+                    const modalId = button.getAttribute('data-modal-hide');
+                    const modal = document.getElementById(modalId);
+                    if (modalId === 'tryModal') return; 
+
                     button.addEventListener('click', () => {
-                        const modalId = button.getAttribute('data-modal-hide');
-                        const modal = document.getElementById(modalId);
                         const persist = (modalId === 'whatsappModal' && button.textContent.toLowerCase().includes('nanti'));
                         hideModal(modal, persist);
                     });
                 });
                  document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
+                     const modal = backdrop.closest('.fixed.inset-0');
+                     if (modal && modal.id === 'tryModal') return; 
+
                      backdrop.addEventListener('click', (event) => {
-                        const modal = event.target.closest('.fixed.inset-0');
                          if (modal && modal.contains(event.target) && event.target === backdrop) {
                             const persist = modal.id === 'whatsappModal';
                             hideModal(modal, persist);
                          }
                      });
                  });
+
+                [tryModalCloseButtonX, tryModalCloseButtonFooter, tryModalBackdrop].forEach(el => {
+                    el.addEventListener('click', (event) => {
+                        if (event.target !== el && el === tryModalBackdrop) return; 
+                        if (!isTryModalRequestActive) {
+                            hideModal(tryModalElement);
+                        }
+                    });
+                });
             }
 
             function resetModalOutput() {
@@ -499,6 +535,11 @@
                 } else {
                     parameterInputsDiv.innerHTML = `<p class="text-sm text-gray-500 italic">Endpoint ini tidak memerlukan parameter tambahan.</p>`;
                 }
+                setTryModalClosable(true);
+                stopRequestButton.classList.add('hidden');
+                requestTimerDisplay.style.display = 'none';
+                runButton.disabled = false;
+                runButton.classList.remove('opacity-60', 'cursor-not-allowed');
                 showModal(tryModalElement);
             }
 
@@ -556,19 +597,29 @@
                             const endpoint = JSON.parse(data.replace(/\\'/g, "'"));
                             openTryModal(endpoint);
                         } catch(parseError) {
-                            console.error("Failed to parse endpoint data:", parseError, "Data:", data);
                             alert("Error: Data endpoint tidak valid atau rusak.");
                         }
                     }
                 }
             });
 
+            stopRequestButton.addEventListener('click', function() {
+                if (requestAbortController) {
+                    requestAbortController.abort('User cancelled');
+                }
+            });
+
             runButton.addEventListener('click', function() {
-                if (loadingIndicator.style.display === 'flex' || !currentEndpointData) return;
+                if (isTryModalRequestActive || !currentEndpointData) return;
+
+                isTryModalRequestActive = true;
+                setTryModalClosable(false);
                 runButton.disabled = true;
                 runButton.classList.add('opacity-60', 'cursor-not-allowed');
                 loadingIndicator.style.display = 'flex';
+                stopRequestButton.classList.remove('hidden');
                 resetModalOutput();
+                
                 let endpointPath = currentEndpointData.endpoint;
                 const queryParams = {};
                 let missingRequired = false;
@@ -594,12 +645,16 @@
                         }
                     }
                 });
+
                 if (missingRequired) {
                     alert('Harap isi semua parameter yang ditandai wajib (*).');
                     if (firstMissingField) firstMissingField.focus();
+                    isTryModalRequestActive = false;
+                    setTryModalClosable(true);
                     runButton.disabled = false;
                     runButton.classList.remove('opacity-60', 'cursor-not-allowed');
                     loadingIndicator.style.display = 'none';
+                    stopRequestButton.classList.add('hidden');
                     return;
                 }
                 
@@ -609,12 +664,28 @@
                 finalUrlTextCode.textContent = finalApiUrl;
                 resultUrlDiv.style.display = 'block';
 
+                requestAbortController = new AbortController();
+                let timeLeft = REQUEST_TIMEOUT_SECONDS;
+                requestTimerDisplay.textContent = `Waktu tersisa: ${timeLeft} detik`;
+                requestTimerDisplay.style.display = 'block';
+
+                requestTimerInterval = setInterval(() => {
+                    timeLeft--;
+                    requestTimerDisplay.textContent = `Waktu tersisa: ${timeLeft} detik`;
+                    if (timeLeft <= 0) {
+                        if (requestAbortController) {
+                            requestAbortController.abort('Timeout');
+                        }
+                    }
+                }, 1000);
+                
                 const axiosConfig = {
                     method: 'get', 
                     url: endpointPath, 
                     baseURL: BASE_DOMAIN,
                     params: queryParams, 
                     responseType: 'arraybuffer',
+                    signal: requestAbortController.signal,
                     validateStatus: status => status >= 200 && status < 500 
                 };
                 
@@ -738,12 +809,18 @@
                     })
                     .catch(error => {
                         errorSound.play();
-                        console.error('Axios request failed:', error);
                         apiResponseDiv.style.display = 'block';
                         responseHeaderPre.textContent = `Error: ${error.message}`;
                         responseBodyContainer.innerHTML = '';
                         if(copyResponseBodyBtn) copyResponseBodyBtn.style.display = 'none';
-                        if (error.response) {
+
+                        if (axios.isCancel(error)) {
+                            const cancelMessage = error.message === 'Timeout'
+                                ? `Permintaan dibatalkan karena timeout (${REQUEST_TIMEOUT_SECONDS} detik).`
+                                : 'Permintaan dibatalkan oleh pengguna.';
+                            responseHeaderPre.textContent = cancelMessage;
+                            responseBodyContainer.innerHTML = `<p class="text-yellow-500 p-4">${cancelMessage}</p>`;
+                        } else if (error.response) {
                             let headerString = `Status: ${error.response.status} ${error.response.statusText}\n`;
                             Object.entries(error.response.headers).forEach(([key, value]) => { headerString += `${key}: ${value}\n`; });
                             responseHeaderPre.textContent = headerString.trim();
@@ -773,9 +850,18 @@
                         }
                     })
                     .finally(() => {
-                        loadingIndicator.style.display = 'none';
+                        isTryModalRequestActive = false;
+                        setTryModalClosable(true);
+                        stopRequestButton.classList.add('hidden');
                         runButton.disabled = false;
                         runButton.classList.remove('opacity-60', 'cursor-not-allowed');
+                        loadingIndicator.style.display = 'none';
+                        if (requestTimerInterval) {
+                            clearInterval(requestTimerInterval);
+                            requestTimerInterval = null;
+                        }
+                        requestTimerDisplay.style.display = 'none';
+                        requestAbortController = null;
                     });
             });
             setupModalTriggers();
