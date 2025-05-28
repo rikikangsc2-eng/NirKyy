@@ -1,49 +1,39 @@
 const axios = require('axios')
+const cheerio = require('cheerio')
 
 module.exports = async function(req, res) {
   try {
     const imageUrl = req.query.url
-
     if (!imageUrl) {
-      return res.errorJson('URL gambar mana, bro?', 400)
+      return res.errorJson('Mana nih URL-nya, bos?', 400)
     }
+
+    const apiKeys = [
+      'sk_ce597f871647cebb433d41f7366a05ba7740503736fe737fd57a2d1ad15823b3c6fe9dd70ed608aa2f3e75768857cfe9c46e6d27ed5b4f8c59f5d68ae492afc2024N78OMedexlCJ3ZwIAu',
+      'sk_6da72b60fd3959bb3546b217a7ef104cc1bfb73fb3f0e2a6fadb93db20901b9f5f183416c5d7d9e7c04630eff5197319c33a6443e147b9ad55d092791705e24a024ijaZl0xwOxQGOF7wFM'
+    ]
+    const randomApiKey = apiKeys[Math.floor(Math.random() * apiKeys.length)]
 
     const response = await axios.post(
-      'https://jigsawstack.com/api/v1/validate/nsfw',
+      'https://api.jigsawstack.com/v1/validate/nsfw',
       { url: imageUrl },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          'User-Agent': 'Mozilla/5.0 (Linux; Android 10; RMX2185 Build/QP1A.190711.020) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.7103.60 Mobile Safari/537.36',
-          'Referer': 'https://jigsawstack.com/nsfw-detection',
-        },
-      }
+      { headers: { 'x-api-key': randomApiKey } }
     )
 
-    const data = response.data
-
-    if (data.success) {
-      const formattedData = {
-        success: data.success,
-        nsfw: data.nsfw,
-        nudity: data.nudity,
-        gore: data.gore,
-        nsfw_score_percent: (data.nsfw_score * 100).toFixed(2) + '%',
-        nudity_score_percent: (data.nudity_score * 100).toFixed(2) + '%',
-        gore_score_percent: (data.gore_score * 100).toFixed(2) + '%',
-      }
-      res.successJson(formattedData)
-    } else {
-      res.errorJson('Validasi gagal, nih. Ada apa ya?', 500)
-    }
+    res.successJson(response.data)
   } catch (e) {
-    if (e.response) {
-      res.errorJson(`Server Jigsawstack ngambek: ${e.response.status} - ${e.response.statusText || 'Gak jelas nih errornya'}`, e.response.status)
-    } else if (e.request) {
-      res.errorJson('Gak ada respons dari Jigsawstack. Koneksi putus kali?', 503)
-    } else {
-      res.errorJson('Ada yang error, tapi bukan di Jigsawstack. Cek lagi kodenya!', 500)
+    if (e.response && e.response.status) {
+      if (e.response.status === 401) {
+        return res.errorJson('API Key-nya gak valid, Bray!', 401)
+      }
+      if (e.response.status === 403) {
+        return res.errorJson('Akses ditolak, mungkin URL-nya bermasalah?', 403)
+      }
+      if (e.response.status === 429) {
+        return res.errorJson('Kebanyakan request nih, santai dulu!', 429)
+      }
+      return res.errorJson(`Ada masalah dari server eksternal: ${e.response.statusText || 'Gak tau deh errornya kenapa.'}`, e.response.status)
     }
+    res.errorJson('Yah, gagal scraping nih, coba lagi nanti ya!', 500)
   }
 }
-
