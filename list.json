@@ -16,6 +16,19 @@
   ],
   "fitur": [
     {
+  "nama": "NSFW Image Detector",
+  "tags": ["Image", "Utility", "AI"],
+  "endpoint": "/api/v1/nsfw-detector",
+  "deskripsi": "Mendeteksi konten NSFW (Not Safe For Work) pada gambar menggunakan URL.",
+  "parameter": [
+    {
+      "params": "url",
+      "example": "https://nirkyy.koyeb.app/example.jpg",
+      "opsional": false
+    }
+  ]
+},
+    {
   "nama": "Kalender Event",
   "tags": ["Information", "Utility"],
   "endpoint": "/api/v1/kalender",
