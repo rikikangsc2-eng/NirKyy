@@ -9,7 +9,7 @@ module.exports = async function(req, res) {
 
     const apiUrl = `https://nirkyy-api.hf.space/api/nsfw?url=${encodeURIComponent(imageUrl)}`
     const response = await axios.get(apiUrl)
-    const { data } = response.data
+    const { data } = response.data.data
 
     if (!data || data.success === false) {
       return res.errorJson('Gagal ngecek, bro!', 500)
