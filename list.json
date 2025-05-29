@@ -384,34 +384,6 @@
   ]
 },
     {
-  "nama": "Fake Shop Image Generator",
-  "tags": ["Image", "Generator", "Fun"],
-  "endpoint": "/api/v1/fakeshop-image",
-  "deskripsi": "Menghasilkan gambar tampilan toko palsu berdasarkan detail yang diberikan.",
-  "parameter": [
-    {
-      "params": "search",
-      "example": "Nirkyy berapa sih",
-      "opsional": false
-    },
-    {
-      "params": "judul",
-      "example": "Nirkyy Web",
-      "opsional": false
-    },
-    {
-      "params": "harga",
-      "example": "Rp 1.000.000.00",
-      "opsional": false
-    },
-    {
-      "params": "thumbnail",
-      "example": "https://nirkyy.koyeb.app/example.jpg",
-      "opsional": false
-    }
-  ]
-},
-    {
   "nama": "Image Random Search",
   "tags": ["Search", "Image", "Random"],
   "endpoint": "/api/v1/image-random",

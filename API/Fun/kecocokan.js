@@ -4,7 +4,7 @@ module.exports = async (req, res) => {
   const { nama1, nama2 } = req.query;
   try {
     const response = await axios.get(
-      `https://express-vercel-ytdl.vercel.app/kecocokan?nama1=${nama1}&nama2=${nama2}`,
+      `https://nirkyy-api.hf.space/api/cupid?nama=${nama1}&nama2=${nama2}`,
       {
         responseType: 'stream',
       }
