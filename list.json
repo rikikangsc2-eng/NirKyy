@@ -16,6 +16,13 @@
   ],
   "fitur": [
     {
+  "nama": "Game Islami Random",
+  "tags": ["Fun", "Random"],
+  "endpoint": "/api/v1/game-islamic",
+  "deskripsi": "Mendapatkan data game Islami secara acak dari database eksternal.",
+  "parameter": []
+},
+    {
   "nama": "NSFW Image Detector",
   "tags": ["Image", "Utility", "AI"],
   "endpoint": "/api/v1/nsfw-detector",
