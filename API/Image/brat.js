@@ -11,7 +11,7 @@ module.exports = async function(req, res) {
 
     const response = await axios.get(apiUrl, { responseType: 'stream' })
 
-    res.setHeader('Content-Type', 'image/jpeg')
+    res.setHeader('Content-Type', 'image/png')
     response.data.pipe(res)
   } catch (e) {
     res.errorJson('Yah, gagal nih ngambil gambarnya. Coba lagi ya!', 500)
