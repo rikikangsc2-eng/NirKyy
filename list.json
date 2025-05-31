@@ -16,6 +16,64 @@
   ],
   "fitur": [
     {
+  "nama": "Instagram Post Generator",
+  "tags": ["Image", "Generator", "Social"],
+  "endpoint": "/api/v1/ig-post-generator",
+  "deskripsi": "Menghasilkan gambar postingan Instagram palsu dengan detail kustom.",
+  "parameter": [
+    {
+      "params": "profile",
+      "example": "http://nirkyy.koyeb.app/logo.jpg",
+      "opsional": false
+    },
+    {
+      "params": "name",
+      "example": "NirKyy API HQ",
+      "opsional": false
+    },
+    {
+      "params": "username",
+      "example": "nirkyy_api_official",
+      "opsional": false
+    },
+    {
+      "params": "image",
+      "example": "https://cdn.pixabay.com/photo/2016/11/19/14:00:00/code-1839406_960_720.jpg",
+      "opsional": false
+    },
+    {
+      "params": "like",
+      "example": "1250",
+      "opsional": false
+    },
+    {
+      "params": "firstLike",
+      "example": "devMaster",
+      "opsional": false
+    },
+    {
+      "params": "caption",
+      "example": "🚀 Tingkatkan proyekmu dengan NirKyy API! Cepat, andal, dan mudah diintegrasikan. Solusi API untuk developer modern.",
+      "opsional": false
+    },
+    {
+      "params": "tags",
+      "example": "NirKyyAPI,APICEPAT,MUDAHINTEGRASI",
+      "opsional": false
+    },
+    {
+      "params": "date",
+      "example": "Baru Saja",
+      "opsional": false
+    },
+    {
+      "params": "totalKomen",
+      "example": "75",
+      "opsional": false
+    }
+  ]
+},
+    {
   "nama": "SoundCloud Downloader",
   "tags": ["Audio", "Downloader"],
   "endpoint": "/api/v1/soundcloud-downloader",
