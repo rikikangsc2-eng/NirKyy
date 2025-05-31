@@ -16,6 +16,19 @@
   ],
   "fitur": [
     {
+  "nama": "SoundCloud Downloader",
+  "tags": ["Audio", "Downloader"],
+  "endpoint": "/api/v1/soundcloud-downloader",
+  "deskripsi": "Unduh audio dari SoundCloud menggunakan URL.",
+  "parameter": [
+    {
+      "params": "url",
+      "example": "https://m.soundcloud.com/leven-winata-105872720/dj-ya-odna-x-the-drum",
+      "opsional": false
+    }
+  ]
+},
+    {
   "nama": "Game Islami Random",
   "tags": ["Fun", "Random"],
   "endpoint": "/api/v1/game-islamic",
