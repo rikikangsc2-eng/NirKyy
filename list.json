@@ -16,6 +16,19 @@
   ],
   "fitur": [
     {
+  "nama": "Spotify Search Track",
+  "tags": ["Search", "Audio"],
+  "endpoint": "/api/v1/spotify-search-track",
+  "deskripsi": "Cari lagu di Spotify berdasarkan kata kunci.",
+  "parameter": [
+    {
+      "params": "query",
+      "example": "mangu",
+      "opsional": false
+    }
+  ]
+},
+    {
   "nama": "Spotify Downloader [audio]",
   "tags": ["Downloader", "Audio"],
   "endpoint": "/api/v1/spotifydlv2",
