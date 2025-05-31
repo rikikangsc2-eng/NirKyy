@@ -16,6 +16,19 @@
   ],
   "fitur": [
     {
+  "nama": "Spotify Downloader [audio]",
+  "tags": ["Downloader", "Audio"],
+  "endpoint": "/api/v1/spotifydlv2",
+  "deskripsi": "Unduh lagu dari Spotify menggunakan URL. Respon langsung audio",
+  "parameter": [
+    {
+      "params": "url",
+      "example": "https://nirkyy.koyeb.app/api/v1/tes?url=https://open.spotify.com/track/16ZR86NtYSiGdeWVRUXCK8",
+      "opsional": false
+    }
+  ]
+},
+    {
   "nama": "Instagram Post Generator",
   "tags": ["Image", "Generator", "Social"],
   "endpoint": "/api/v1/ig-post-generator",
