@@ -4,22 +4,23 @@ module.exports = async (req, res) => {
   const imageUrl = req.query.url;
 
   if (!imageUrl) {
-    return res.errorJson('Parameter url wajib diisi', 400);
+    return res.status(400).json({ error: 'Parameter url wajib diisi' });
   }
 
   try {
     const apiUrl = `https://nirkyy-api.hf.space/api/togihibli?url=${encodeURIComponent(imageUrl)}`;
     const response = await axios.get(apiUrl, {
-      responseType: 'arraybuffer'
+      responseType: 'stream'
     });
 
     res.writeHead(200, {
-      'Content-Type': response.headers['content-type'],
-      'Content-Length': response.headers['content-length']
+      'Content-Type': 'image/jpeg'
     });
-    res.end(response.data);
+
+    return response.data.pipe(res);
+
   } catch (error) {
     console.error('Error:', error);
-    res.errorJson('Terjadi kesalahan saat memproses gambar Ghibli: ' + error.message, 500);
+    return res.status(500).json({ error: 'Terjadi kesalahan saat memproses gambar Ghibli: ' + error.message });
   }
 };
