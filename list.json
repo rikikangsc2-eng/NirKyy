@@ -16,19 +16,6 @@
   ],
   "fitur": [
     {
-  "nama": "Screenshot Peta",
-  "tags": ["Image", "Utility"],
-  "endpoint": "/api/v1/peta-screenshot",
-  "deskripsi": "Mengambil screenshot peta berdasarkan lokasi yang diberikan.",
-  "parameter": [
-    {
-      "params": "lokasi",
-      "example": "tongkrongan brk jaya Mukti mati suri",
-      "opsional": false
-    }
-  ]
-},
-    {
   "nama": "Game Islami Random",
   "tags": ["Fun", "Random"],
   "endpoint": "/api/v1/game-islamic",
