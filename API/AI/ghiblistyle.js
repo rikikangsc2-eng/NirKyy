@@ -10,14 +10,14 @@ module.exports = async (req, res) => {
   try {
     const apiUrl = `https://nirkyy-api.hf.space/api/togihibli?url=${encodeURIComponent(imageUrl)}`;
     const response = await axios.get(apiUrl, {
-      responseType: 'stream'
+      responseType: 'arraybuffer'
     });
 
     res.writeHead(200, {
       'Content-Type': 'image/jpeg'
     });
 
-    return response.data.pipe(res);
+    res.end(response.data);
 
   } catch (error) {
     console.error('Error:', error);

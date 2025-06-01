@@ -26,11 +26,11 @@ module.exports = async (req, res) => {
     }
 
     const imageResponse = await axios.get(imageLink, {
-      responseType: 'stream'
+      responseType: 'arraybuffer' 
     });
 
     res.setHeader('Content-Type', 'image/jpeg');
-    imageResponse.data.pipe(res);
+    res.send(Buffer.from(imageResponse.data));
 
   } catch (e) {
     if (e.response && e.response.status) {

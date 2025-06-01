@@ -5,7 +5,7 @@ module.exports = async function(req, res) {
     const initialPrompt = req.query.prompt;
 
     if (!initialPrompt) {
-      return res.errorJson({ message: 'Prompt-nya kosong nih, mau bikin gambar apa dong?' },400);
+      return res.errorJson({ message: 'Prompt-nya kosong nih, mau bikin gambar apa dong?' }, 400);
     }
 
     const fluxaiUrl = 'https://fluxai.pro/api/prompts/generate';
@@ -38,7 +38,7 @@ module.exports = async function(req, res) {
           try {
             promptParts.push(JSON.parse(contentJsonString));
           } catch (jsonParseError) {
-          
+            
           }
         }
       }
@@ -54,11 +54,11 @@ module.exports = async function(req, res) {
     const nirkyyImageUrl = `${nirkyyUrlBase}?prompt=${encodedPrompt}&aspect_ratio=1%3A1`;
 
     const nirkyyResponse = await axios.get(nirkyyImageUrl, {
-      responseType: 'stream'
+      responseType: 'arraybuffer' 
     });
 
     if (nirkyyResponse.status !== 200) {
-      return res.errorJson({ message: 'Yah, gagal bikin gambarnya di Nirkyy. Servernya lagi ngambek kayaknya?' },nirkyyResponse.status || 500);
+      return res.errorJson({ message: 'Yah, gagal bikin gambarnya di Nirkyy. Servernya lagi ngambek kayaknya?' }, nirkyyResponse.status || 500);
     }
 
     if (res.headersSent) {
@@ -66,27 +66,11 @@ module.exports = async function(req, res) {
     }
 
     res.setHeader('Content-Type', nirkyyResponse.headers['content-type'] || 'image/png');
-
-    const sourceStream = nirkyyResponse.data;
-    sourceStream.pipe(res);
-
-    sourceStream.on('error', (streamError) => {
-      if (!res.headersSent) {
-        res.errorJson({ message: 'Waduh, ada masalah pas lagi streaming gambarnya. Gagal maning!' },500);
-      } else if (!res.writableEnded) {
-        res.end();
-      }
-    });
-
-    req.on('close', () => {
-      if (sourceStream && typeof sourceStream.destroy === 'function') {
-        sourceStream.destroy();
-      }
-    });
+    res.end(nirkyyResponse.data); 
 
   } catch (e) {
     if (!res.headersSent) {
-      res.errorJson({ message: 'Busett, ada error teknis nih bro. Coba lagi ntar ya!' },500);
+      res.errorJson({ message: 'Busett, ada error teknis nih bro. Coba lagi ntar ya!' }, 500);
     } else if (!res.writableEnded) {
       res.end();
     }

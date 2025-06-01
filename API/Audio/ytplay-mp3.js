@@ -7,14 +7,14 @@ module.exports = (req, res) => {
   if (!text) return errorJson(res, 'Waduh, parameter "q" (query) nya mana, Cuy? Contohnya nih: /play?q=dj komang', 400);
 
   axios.get(`https://pursky.vercel.app/api/ytplay?q=${text}`)
-        .then(response => {
+    .then(response => {
       if (!response.data || !response.data.audio) return errorJson(res, 'Gagal ngambil link audio dari API eksternal nih, Bre. Coba lagi ya!', 500);
       const { audio } = response.data;
       const headers = response.data.note?.headers || {};
       return axios({
         method: 'get',
         url: audio,
-        responseType: 'stream',
+        responseType: 'arraybuffer',
         headers: {
           'User-Agent': headers['User-Agent'] || 'Mozilla/5.0 (Linux; Android 10; RMX2185 Build/QP1A.190711.020) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.7049.100 Mobile Safari/537.36',
           'Referer': headers['Referer'] || audio
@@ -26,8 +26,9 @@ module.exports = (req, res) => {
       res.writeHead(200, {
         'Content-Type': 'audio/mpeg',
         'Content-Disposition': `attachment; filename="${filename}.mp3"`,
+        'Content-Length': audioResponse.data.length
       });
-      audioResponse.data.pipe(res);
+      res.end(Buffer.from(audioResponse.data));
     })
     .catch(error => {
       console.error('Error fetching or streaming audio:', error.message);
@@ -36,4 +37,3 @@ module.exports = (req, res) => {
       else errorJson(res, `Ada error internal nih: ${error.message}`, 500);
     });
 };
-

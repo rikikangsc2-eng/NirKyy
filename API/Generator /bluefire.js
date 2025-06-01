@@ -59,14 +59,14 @@ module.exports = async (req, res) => {
             const imageResponse = await axios({
                 method: 'get',
                 url: imageUrl,
-                responseType: 'stream',
+                responseType: 'arraybuffer',
                 headers: {
                     'User-Agent': headers['User-Agent'],
                     'Referer': apiUrl
                 }
             });
             res.setHeader('Content-Type', 'image/gif');
-            imageResponse.data.pipe(res);
+            res.send(imageResponse.data);
         } else {
             return res.errorJson(new Error('Gagal mendapatkan URL gambar dari API FlamingText'), 500);
         }

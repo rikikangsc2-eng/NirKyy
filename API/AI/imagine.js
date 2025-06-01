@@ -4,7 +4,7 @@ module.exports = async (req, res) => {
   try {
     const { prompt } = req.query;
     if (!prompt) return res.errorJson('Missing prompt', 400);
-    
+
     const boundary = '----WebKitFormBoundary' + Math.random().toString(36).substring(2);
     const body = [
       `--${boundary}`,
@@ -30,23 +30,23 @@ module.exports = async (req, res) => {
       'none',
       `--${boundary}--`
     ].join('\r\n');
-    
+
     const response = await axios({
       method: 'post',
       url: 'https://ai-api.magicstudio.com/api/ai-art-generator',
-      data: body,
+      data: Buffer.from(body), // Mengubah string body menjadi Buffer
       headers: {
         'Content-Type': `multipart/form-data; boundary=${boundary}`,
         'Origin': 'https://magicstudio.com',
         'Referer': 'https://magicstudio.com/',
         'User-Agent': 'Mozilla/5.0'
       },
-      responseType: 'stream'
+      responseType: 'arraybuffer' // Mengganti responseType menjadi 'arraybuffer'
     });
-    
+
     res.setHeader('Content-Type', 'image/jpeg');
-    response.data.pipe(res);
-    
+    res.send(Buffer.from(response.data)); // Mengirimkan data sebagai Buffer dari ArrayBuffer
+
   } catch (error) {
     res.errorJson('Error generating image');
   }

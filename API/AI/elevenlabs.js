@@ -37,7 +37,7 @@ module.exports = async (req, res) => {
           'User-Agent': 'Mozilla/5.0 (Linux; Android 10; RMX2185 Build/QP1A.190711.020) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.6998.135 Mobile Safari/537.36',
           'Referer': baseUrl + '/'
         },
-        responseType: 'stream'
+        responseType: 'arraybuffer' 
       });
 
       res.set({
@@ -45,7 +45,7 @@ module.exports = async (req, res) => {
         'Content-Length': response.headers['content-length']
       });
 
-      return response.data.pipe(res);
+      return res.send(Buffer.from(response.data));
 
     } catch (e) {}
   }

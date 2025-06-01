@@ -10,12 +10,11 @@ module.exports = async function(req, res) {
 
     const apiUrl = `https://nirkyy-api.hf.space/api/html-to-image?html=${encodeURIComponent(htmlContent)}`
 
-    const response = await axios.get(apiUrl, { responseType: 'stream' })
+    const response = await axios.get(apiUrl, { responseType: 'arraybuffer' })
 
     res.setHeader('Content-Type', 'image/jpeg')
-    response.data.pipe(res)
+    res.send(Buffer.from(response.data))
   } catch (e) {
     res.errorJson('Waduh, gagal bikin gambarnya!', 500)
   }
 }
-

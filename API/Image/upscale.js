@@ -78,14 +78,12 @@ module.exports = async (req, res) => {
     if (result && result.downloadUrls && result.downloadUrls.length > 0) {
       const imageUrl = result.downloadUrls[0];
       try {
-        const imageResponse = await axios({
-          method: 'get',
-          url: imageUrl,
-          responseType: 'stream'
+        const imageResponse = await axios.get(imageUrl, {
+          responseType: 'arraybuffer' 
         });
 
         res.setHeader('Content-Type', imageResponse.headers['content-type']);
-        imageResponse.data.pipe(res)
+        res.send(Buffer.from(imageResponse.data)); 
       } catch (error) {
         console.error("Error fetching or streaming image:", error);
         res.errorJson("Error processing image");

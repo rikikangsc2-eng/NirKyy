@@ -16,15 +16,15 @@ module.exports = async (req, res) => {
         'Accept-Language': 'id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7',
         'User-Agent': 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.106 Mobile Safari/537.36'
       },
-      responseType: 'stream'
+      responseType: 'arraybuffer' 
     });
     
     res.writeHead(200, {
       'Content-Type': 'image/jpeg'
     });
     
-    response.data.pipe(res);
+    res.end(Buffer.from(response.data));
   } catch (error) {
-    res.errorJson({ error: 'An error occurred' });
+    res.json({ error: 'An error occurred' });
   }
 };

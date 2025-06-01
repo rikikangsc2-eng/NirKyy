@@ -9,11 +9,11 @@ module.exports = async function(req, res) {
     const responDariLuar = await axios({
       method: 'get',
       url: urlTujuan,
-      responseType: 'stream'
+      responseType: 'arraybuffer' 
     });
     
     res.setHeader('Content-Type', responDariLuar.headers['content-type'] || 'image/jpeg');
-    responDariLuar.data.pipe(res);
+    res.send(responDariLuar.data);
     
   } catch (eror) {
     if (eror.response) {

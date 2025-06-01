@@ -9,10 +9,10 @@ module.exports = async function(req, res) {
 
     const apiUrl = `https://nirkyy-api.hf.space/api/brat?text=${encodeURIComponent(inputText)}`
 
-    const response = await axios.get(apiUrl, { responseType: 'stream' })
+    const response = await axios.get(apiUrl, { responseType: 'arraybuffer' })
 
     res.setHeader('Content-Type', 'image/png')
-    response.data.pipe(res)
+    res.send(response.data)
   } catch (e) {
     res.errorJson('Yah, gagal nih ngambil gambarnya. Coba lagi ya!', 500)
   }

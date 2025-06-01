@@ -2,124 +2,108 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 
 module.exports = async function(req, res) {
-  const agenPengguna = 'Mozilla/5.0 (Linux; Android 10; RMX2185 Build/QP1A.190711.020) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.7103.125 Mobile Safari/537.36';
-  const alamatUtama = 'https://spotmate.online/en';
-  const alamatKonversi = 'https://spotmate.online/convert';
+  const userAgent = 'Mozilla/5.0 (Linux; Android 10; RMX2185 Build/QP1A.190711.020) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.7103.125 Mobile Safari/537.36';
+  const mainUrl = 'https://spotmate.online/en';
+  const convertUrl = 'https://spotmate.online/convert';
   
-  const { url: urlLagu } = req.query;
+  const { url: songUrl } = req.query;
   
-  if (!urlLagu) {
-    return res.errorJson("Bro, URL Spotify-nya jangan lupa diisi di query 'url' ya.", 400);
+  if (!songUrl) {
+    return res.errorJson("Please provide the Spotify URL in the 'url' query parameter.", 400);
   }
   
-  let kukiSesiGabung = '';
-  let tokenCsrfSpotmate = '';
+  let sessionCookie = '';
+  let csrfToken = '';
   
   try {
-    const responAwal = await axios.get(alamatUtama, {
+    const initialResponse = await axios.get(mainUrl, {
       headers: {
-        'User-Agent': agenPengguna,
+        'User-Agent': userAgent,
       }
     });
     
-    const $ = cheerio.load(responAwal.data);
-    tokenCsrfSpotmate = $('meta[name="csrf-token"]').attr('content');
+    const $ = cheerio.load(initialResponse.data);
+    csrfToken = $('meta[name="csrf-token"]').attr('content');
     
-    if (!tokenCsrfSpotmate) {
-      return res.errorJson("Duh, token CSRF-nya nggak ketemu nih di halaman Spotmate. Cek lagi coba.", 500);
+    if (!csrfToken) {
+      return res.errorJson("Couldn't find the CSRF token on the Spotmate page.", 500);
     }
     
-    const semuaKuki = responAwal.headers['set-cookie'];
-    if (semuaKuki && Array.isArray(semuaKuki)) {
-      kukiSesiGabung = semuaKuki.map(kuki => kuki.split(';')[0]).join('; ');
+    const allCookies = initialResponse.headers['set-cookie'];
+    if (allCookies && Array.isArray(allCookies)) {
+      sessionCookie = allCookies.map(cookie => cookie.split(';')[0]).join('; ');
     }
     
-  } catch (eror) {
-    return res.errorJson("Waduh, gagal ngambil token CSRF atau kuki dari Spotmate nih. Mungkin servernya lagi sibuk atau ada update.", 500);
+  } catch (error) {
+    return res.errorJson("Failed to retrieve CSRF token or cookies from Spotmate. The server might be busy or there was an update.", 500);
   }
   
-  let tautanHasil;
+  let downloadLink;
   
   try {
-    const dataKirim = { urls: urlLagu };
-    const kepalaUntukKonversi = {
+    const postData = { urls: songUrl };
+    const conversionHeaders = {
       'Content-Type': 'application/json',
-      'X-CSRF-TOKEN': tokenCsrfSpotmate,
-      'User-Agent': agenPengguna,
-      'Referer': alamatUtama,
+      'X-CSRF-TOKEN': csrfToken,
+      'User-Agent': userAgent,
+      'Referer': mainUrl,
     };
-    if (kukiSesiGabung) {
-      kepalaUntukKonversi['Cookie'] = kukiSesiGabung;
+    if (sessionCookie) {
+      conversionHeaders['Cookie'] = sessionCookie;
     }
     
-    const responDariKonversi = await axios.post(alamatKonversi, dataKirim, {
-      headers: kepalaUntukKonversi
+    const conversionResponse = await axios.post(convertUrl, postData, {
+      headers: conversionHeaders
     });
     
-    if (responDariKonversi.data.error || !responDariKonversi.data.url) {
-      const pesanDariServer = responDariKonversi.data.message || "Spotmate nggak ngasih tau kenapa, tapi konversinya gagal.";
-      return res.errorJson(`Gagal konversi URL nih: ${pesanDariServer}`, 500);
+    if (conversionResponse.data.error || !conversionResponse.data.url) {
+      const serverMessage = conversionResponse.data.message || "Spotmate didn't provide a reason for the conversion failure.";
+      return res.errorJson(`Failed to convert URL: ${serverMessage}`, 500);
     }
-    tautanHasil = responDariKonversi.data.url;
+    downloadLink = conversionResponse.data.url;
     
-  } catch (eror) {
-    let pesanSalah = "Gagal pas mau konversi URL Spotify-nya. Server Spotmate lagi rewel kayaknya.";
-    if (eror.response && eror.response.data && typeof eror.response.data.message === 'string') {
-      pesanSalah = `Spotmate ngasih pesan error: ${eror.response.data.message}`;
-    } else if (eror.response && eror.response.status) {
-      pesanSalah = `Gagal konversi, Spotmate ngasih status kode ${eror.response.status}.`;
+  } catch (error) {
+    let errorMessage = "Failed during Spotify URL conversion. Spotmate server might be experiencing issues.";
+    if (error.response && error.response.data && typeof error.response.data.message === 'string') {
+      errorMessage = `Spotmate returned an error: ${error.response.data.message}`;
+    } else if (error.response && error.response.status) {
+      errorMessage = `Conversion failed, Spotmate returned status code ${error.response.status}.`;
     }
-    return res.errorJson(pesanSalah, 500);
+    return res.errorJson(errorMessage, 500);
   }
   
-  if (!tautanHasil) {
-    return res.errorJson("Aneh banget, URL buat download-nya kok nggak ada setelah proses konversi.", 500);
+  if (!downloadLink) {
+    return res.errorJson("No download URL was provided after the conversion process.", 500);
   }
   
   try {
-    const responUntukStream = await axios.get(tautanHasil, {
-      responseType: 'stream',
+    const streamResponse = await axios.get(downloadLink, {
+      responseType: 'arraybuffer', // Changed to arraybuffer
       headers: {
-        'User-Agent': agenPengguna,
-        'Referer': alamatUtama
+        'User-Agent': userAgent,
+        'Referer': mainUrl
       }
     });
     
-    if (responUntukStream.headers['content-type']) {
-      res.setHeader('Content-Type', responUntukStream.headers['content-type']);
+    if (streamResponse.headers['content-type']) {
+      res.setHeader('Content-Type', streamResponse.headers['content-type']);
     }
-    if (responUntukStream.headers['content-disposition']) {
-      res.setHeader('Content-Disposition', responUntukStream.headers['content-disposition']);
+    if (streamResponse.headers['content-disposition']) {
+      res.setHeader('Content-Disposition', streamResponse.headers['content-disposition']);
     }
-    if (responUntukStream.headers['content-length']) {
-      res.setHeader('Content-Length', responUntukStream.headers['content-length']);
+    if (streamResponse.headers['content-length']) {
+      res.setHeader('Content-Length', streamResponse.headers['content-length']);
     }
     
-    responUntukStream.data.pipe(res);
+    res.send(Buffer.from(streamResponse.data)); // Send the ArrayBuffer as a Buffer
     
-    responUntukStream.data.on('error', (erorAliran) => {
-      if (!res.headersSent) {
-        res.errorJson("Duh, ada masalah pas lagi streaming filenya ke kamu. Coba lagi bentar ya.", 500);
-      } else {
-        if (!res.writableEnded) {
-          res.end();
-        }
-      }
-    });
-    
-    responUntukStream.data.on('end', () => {
-      if (!res.writableEnded) {
-        res.end();
-      }
-    });
-    
-  } catch (eror) {
-    let pesanSalahAkhir = "Waduh, gagal nih mau download filenya dari server sumber.";
-    if (eror.response && eror.response.status) {
-      pesanSalahAkhir = `Gagal download filenya, server sumber ngasih status kode ${eror.response.status}.`;
+  } catch (error) {
+    let finalErrorMessage = "Failed to download the file from the source server.";
+    if (error.response && error.response.status) {
+      finalErrorMessage = `File download failed, source server returned status code ${error.response.status}.`;
     }
     if (!res.headersSent) {
-      return res.errorJson(pesanSalahAkhir, 500);
+      return res.errorJson(finalErrorMessage, 500);
     } else {
       if (!res.writableEnded) {
         res.end();

@@ -10,10 +10,10 @@ module.exports = async function(req, res) {
     
     const apiUrl = `https://nirkyy-api.hf.space/api/animegine?prompt=${encodeURIComponent(prompt)}`
     
-    const response = await axios.get(apiUrl, { responseType: 'stream' })
+    const response = await axios.get(apiUrl, { responseType: 'arraybuffer' })
     
     res.setHeader('Content-Type', 'image/jpeg')
-    response.data.pipe(res)
+    res.send(response.data)
   } catch (e) {
     res.errorJson('Gagal ngambil gambar, coba lagi nanti ya!', 500)
   }

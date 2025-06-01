@@ -22,7 +22,7 @@ module.exports = async (req, res) => {
     const voiceData = voices[voice];
 
     if (!voiceData) {
-      return res.errorJson({message:"Voice tidak valid", voices}, 400);
+      return res.status(400).json({ message: "Voice tidak valid", voices });
     }
 
     const payload = new URLSearchParams({
@@ -41,13 +41,13 @@ module.exports = async (req, res) => {
 
     const audioUrl = response.data.audio_url;
     if (!audioUrl) {
-      return res.errorJson('Audio URL tidak ditemukan');
+      return res.status(500).json('Audio URL tidak ditemukan');
     }
 
-    const audioResponse = await axios.get(audioUrl, { responseType: 'stream' });
+    const audioResponse = await axios.get(audioUrl, { responseType: 'arraybuffer' });
     res.setHeader('Content-Type', 'audio/mpeg');
-    audioResponse.data.pipe(res)
+    res.send(audioResponse.data);
   } catch (error) {
-    res.errorJson(error.message);
+    res.status(500).json(error.message);
   }
 };

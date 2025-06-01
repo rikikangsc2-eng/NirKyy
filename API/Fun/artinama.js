@@ -9,11 +9,11 @@ module.exports = async (req, res) => {
 
   try {
     const apiUrl = `https://express-vercel-ytdl.vercel.app/arti?nama=${encodeURIComponent(nama)}`;
-    const response = await axios.get(apiUrl, { responseType: 'stream' });
+    const response = await axios.get(apiUrl, { responseType: 'arraybuffer' });
     res.setHeader('Content-Type', 'image/jpeg');
-    response.data.pipe(res);
+    res.send(response.data);
   } catch (error) {
-    console.error("Error fetching or streaming khodam image:", error);
+    console.error("Error fetching or sending khodam image:", error);
     res.errorJson({ error: "Gagal mengambil atau mengirim gambar khodam." });
   }
 };

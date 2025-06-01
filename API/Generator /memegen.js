@@ -9,7 +9,7 @@ module.exports = async (req, res) => {
     const bawah = text_bawah ? encodeURIComponent(text_bawah) : ' ';
     url += `/${atas}/${bawah}.png`;
   } else {
-    return res.errorJson({ error: 'Parameter text-atas atau text-bawah harus diisi.' }, 400);
+    return res.status(400).json({ error: 'Parameter text-atas atau text-bawah harus diisi.' });
   }
 
   if (background) {
@@ -17,11 +17,11 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const response = await axios.get(url, { responseType: 'stream' });
+    const response = await axios.get(url, { responseType: 'arraybuffer' });
     res.set('Content-Type', 'image/png');
-    response.data.pipe(res);
+    res.send(Buffer.from(response.data));
   } catch (error) {
     console.error('Error saat memanggil API memegen:', error);
-    res.errorJson({ error: 'Terjadi kesalahan saat memproses permintaan.' });
+    res.status(500).json({ error: 'Terjadi kesalahan saat memproses permintaan.' });
   }
 };

@@ -20,14 +20,12 @@ module.exports = async function(req, res) {
         }
       });
       const imageUrl = response.data.imageUrl;
-      const streamimagenya = await axios({
-        method: 'get',
-        url: imageUrl,
-        responseType: 'stream',
+      const imageResponse = await axios.get(imageUrl, {
+        responseType: 'arraybuffer', 
       });
       
       res.set('Content-Type', 'image/jpeg');
-      streamimagenya.data.pipe(res);
+      res.send(Buffer.from(imageResponse.data));
       return; 
 
     } catch (e) {

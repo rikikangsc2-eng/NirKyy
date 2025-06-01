@@ -18,11 +18,11 @@ module.exports = async (req, res) => {
     });
 
     const imageUrl = response.data.url;
-    const imageResp = await axios.get(imageUrl, { responseType: 'stream' });
+    const imageResp = await axios.get(imageUrl, { responseType: 'arraybuffer' });
     const contentType = imageResp.headers['content-type'] || 'image/jpeg';
 
     res.setHeader('Content-Type', contentType);
-    imageResp.data.pipe(res);
+    res.send(Buffer.from(imageResp.data));
 
   } catch (err) {
     console.error('Error cuy:', err.message);

@@ -10,6 +10,9 @@ function shuffleArray(array) {
     return array;
 }
 
+function errorJson(res, message, status) {
+  return res.status(status).json({ error: message });
+}
 
 module.exports = async function(req, res) {
   try {
@@ -48,7 +51,7 @@ module.exports = async function(req, res) {
             images.push({ imageUrl: imageUrl });
           }
         } catch (parseError) {
-
+          // Do nothing on parse error
         }
       }
     });
@@ -63,26 +66,26 @@ module.exports = async function(req, res) {
     for (const imageObj of images) {
       const selectedImageUrl = imageObj.imageUrl;
       try {
-            const imageResponse = await axios({
-      method: 'get',
-      url: selectedImageUrl,
-      responseType: 'stream',
-      timeout: 5000,
-      headers: {
-        'Accept': 'image/jpeg, image/png, image/gif',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.7049.111 Safari/537.36',
-        'Referer': targetUrl
-      }
-    });
+        const imageResponse = await axios({
+          method: 'get',
+          url: selectedImageUrl,
+          responseType: 'arraybuffer', // Changed to arraybuffer
+          timeout: 5000,
+          headers: {
+            'Accept': 'image/jpeg, image/png, image/gif',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.7049.111 Safari/537.36',
+            'Referer': targetUrl
+          }
+        });
 
-    if (imageResponse.status === 200 && imageResponse.headers['content-type']?.startsWith('image/')) {
-      res.setHeader('Content-Type', imageResponse.headers['content-type']);
-      imageResponse.data.pipe(res);
-      successful = true;
-      break;
-    }
+        if (imageResponse.status === 200 && imageResponse.headers['content-type']?.startsWith('image/')) {
+          res.setHeader('Content-Type', imageResponse.headers['content-type']);
+          res.send(Buffer.from(imageResponse.data)); // Send as Buffer
+          successful = true;
+          break;
+        }
       } catch (fetchError) {
-
+        // Do nothing on fetch error, try next image
       }
     }
 

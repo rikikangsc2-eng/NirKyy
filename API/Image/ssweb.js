@@ -13,7 +13,7 @@ module.exports = async (req, res) => {
     const screenshotApiUrl = `https://nirkyy-api.hf.space/api/ssweb?url=${encodeURIComponent(url)}&type=${screenshotType}`;
 
     const screenshotResponse = await axios.get(screenshotApiUrl, {
-      responseType: 'stream'
+      responseType: 'arraybuffer'
     });
 
     const contentType = screenshotResponse.headers['content-type'];
@@ -23,14 +23,7 @@ module.exports = async (req, res) => {
       res.setHeader('Content-Type', 'image/png');
     }
 
-    screenshotResponse.data.pipe(res);
-
-    screenshotResponse.data.on('error', (err) => {
-      console.error(`Gagal nyedot gambar stream-nya: ${err.message}`);
-      if (!res.headersSent) {
-        res.status(500).json({ error: `Gagal nyedot gambar stream-nya. Ada apa nih?! ${err.message}` });
-      }
-    });
+    res.send(screenshotResponse.data);
 
   } catch (e) {
     console.error(`Ada error tolol di prosesnya: ${e.message}`);

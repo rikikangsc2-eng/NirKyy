@@ -6,13 +6,13 @@ module.exports = async (req, res) => {
     const response = await axios.get(
       `https://nirkyy-api.hf.space/api/cupid?nama=${nama1}&nama2=${nama2}`,
       {
-        responseType: 'stream',
+        responseType: 'arraybuffer',
       }
     );
     res.setHeader('Content-Type', 'image/jpeg');
-    response.data.pipe(res);
+    res.send(response.data);
   } catch (error) {
     console.error('Error fetching image:', error);
-    res.errorJson('Failed to fetch image');
+    res.status(500).json({ error: 'Failed to fetch image' });
   }
 };

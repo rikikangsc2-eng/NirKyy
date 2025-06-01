@@ -7,10 +7,16 @@ module.exports = async (req, res) => {
     if (!imageUrl) {
       return res.errorJson({ error: 'URL parameter is required' }, 400);
     }
+
     const imageResponse = await axios.get(imageUrl, { responseType: 'arraybuffer' });
-    const base64Image = `data:image/jpeg;base64,${Buffer.from(imageResponse.data).toString('base64')}`;
+    const imageBuffer = Buffer.from(imageResponse.data);
+
     const formData = new FormData();
-    formData.append('image', base64Image);
+    formData.append('image', imageBuffer, {
+      filename: 'image.jpeg', 
+      contentType: 'image/jpeg',
+    });
+
     const apiResponse = await axios.post(
       'https://ai-api.magicstudio.com/api/remove-background',
       formData,
@@ -29,13 +35,15 @@ module.exports = async (req, res) => {
           'Sec-Fetch-Mode': 'cors',
           'Sec-Fetch-Site': 'same-site',
           'User-Agent': 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Mobile Safari/537.36'
-        }
+        },
+        responseType: 'arraybuffer' // Menambahkan responseType arraybuffer
       }
     );
-    const outputImageUrl = apiResponse.data.results[0].image;
-    const outputImageResponse = await axios.get(outputImageUrl, { responseType: 'stream' });
-    res.setHeader('Content-Type', 'image/jpeg');
-    outputImageResponse.data.pipe(res);
+
+    // Langsung mengirimkan arraybuffer sebagai respons tanpa perlu mengubah ke stream
+    res.setHeader('Content-Type', 'image/png'); // Asumsi API mengembalikan PNG transparan
+    res.send(Buffer.from(apiResponse.data)); 
+
   } catch (error) {
     console.error('Error:', error.response ? error.response.data : error.message);
     res.errorJson({ error: 'Internal Server Error', details: error.message });

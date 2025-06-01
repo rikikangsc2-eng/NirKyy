@@ -13,11 +13,11 @@ module.exports = async function(req, res) {
     const response = await axios({
       method: 'get',
       url: url,
-      responseType: 'stream'
+      responseType: 'arraybuffer'
     })
 
     res.setHeader('Content-Type', 'image/jpeg')
-    response.data.pipe(res)
+    res.send(response.data)
 
   } catch (error) {
     res.errorJson('Yah, gagal ngambil gambar nih.', error.response ? error.response.status : 500)

@@ -86,9 +86,9 @@ module.exports = async (req, res) => {
       headers: headers
     });
 
-    const gambarResponse = await axios.get(response.data.src, { responseType: 'stream' });
+    const gambarResponse = await axios.get(response.data.src, { responseType: 'arraybuffer' });
     res.setHeader('Content-Type', 'image/png');
-    gambarResponse.data.pipe(res);
+    res.send(gambarResponse.data);
   } catch (error) {
     let errorMessage = error.message;
     let status = 500;

@@ -9,11 +9,11 @@ module.exports = async function(req, res) {
 
     const apiUrl = `https://nirkyy-api.hf.space/api/bochil?name=${encodeURIComponent(nama)}`
 
-    const response = await axios.get(apiUrl, { responseType: 'stream' })
+    const response = await axios.get(apiUrl, { responseType: 'arraybuffer' })
 
     if (response.headers['content-type'] && response.headers['content-type'].startsWith('image/')) {
       res.setHeader('Content-Type', response.headers['content-type'])
-      response.data.pipe(res)
+      res.send(response.data)
     } else {
       res.errorJson('Bukan gambar, cuy!', 500)
     }
@@ -27,4 +27,3 @@ module.exports = async function(req, res) {
     }
   }
 }
-

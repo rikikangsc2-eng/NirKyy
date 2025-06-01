@@ -70,12 +70,12 @@ module.exports = async function(req, res) {
     if (statusData && statusData.status === 'success' && statusData.downloadUrls && statusData.downloadUrls.length > 0) {
     const downloadUrl = statusData.downloadUrls[0]
     
-     axios.get(downloadUrl, {responseType:"stream"}).then(alamahoy => {
+     axios.get(downloadUrl, {responseType:"arraybuffer"}).then(imageResult => {
        res.setHeader('Content-Type','image/jpeg')
-       alamahoy.data.pipe(res)
-     }).catch(englor => {
-       res.errorJson("Gagal pas kirim gambar: "+englor.message)
-     });
+       res.send(Buffer.from(imageResult.data))
+     }).catch(error => {
+       res.errorJson("Gagal pas kirim gambar: "+error.message)
+     })
     } else {
       throw new Error('Waduh, gambarnya nggak kelar di-upscale nih setelah ditungguin lama.')
     }

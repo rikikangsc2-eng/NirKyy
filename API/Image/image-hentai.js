@@ -26,7 +26,7 @@ module.exports = async (req, res) => {
       } else if (typeof responseData === 'object') {
           if (responseData.url && typeof responseData.url === 'string' && responseData.url.startsWith('http')) {
               imageUrl = responseData.url.trim();
-          } else if (responseData.data && typeof responseData.data.url === 'string' && responseData.data.startsWith('http')) {
+          } else if (responseData.data && typeof responseData.data.url === 'string' && responseData.data.url.startsWith('http')) {
               imageUrl = responseData.data.url.trim();
           }
       }
@@ -45,15 +45,15 @@ module.exports = async (req, res) => {
   }
 
   try {
-  const imageResponse = await axios.get(imageUrl, { responseType: 'stream' });
-const contentType = imageResponse.headers['content-type'];
+    const imageResponse = await axios.get(imageUrl, { responseType: 'arraybuffer' });
+    const contentType = imageResponse.headers['content-type'];
 
-if (!contentType || !contentType.startsWith('image/')) {
-    return res.errorJson('URL did not provide an image.', 500);
-}
+    if (!contentType || !contentType.startsWith('image/')) {
+      return res.errorJson('URL did not provide an image.', 500);
+    }
 
-res.setHeader('Content-Type', contentType);
-imageResponse.data.pipe(res);
+    res.setHeader('Content-Type', contentType);
+    res.end(Buffer.from(imageResponse.data));
 
   } catch (error) {
     res.errorJson('Failed to fetch image.', 500);
