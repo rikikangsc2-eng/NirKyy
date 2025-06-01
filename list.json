@@ -16,6 +16,19 @@
   ],
   "fitur": [
     {
+  "nama": "SoundCloud Search",
+  "tags": ["Search", "Audio"],
+  "endpoint": "/api/v1/soundcloud-search",
+  "deskripsi": "Cari lagu di SoundCloud berdasarkan kata kunci.",
+  "parameter": [
+    {
+      "params": "query",
+      "example": "Alan Walker Faded",
+      "opsional": false
+    }
+  ]
+},
+    {
   "nama": "Spotify Search Track",
   "tags": ["Search", "Audio"],
   "endpoint": "/api/v1/spotify-search-track",
