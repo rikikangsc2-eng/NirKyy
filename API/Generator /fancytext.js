@@ -43,7 +43,7 @@ module.exports = async (req, res) => {
             }
         });
 
-        res.succesJson(generateResponse.data);
+        res.successJson(generateResponse.data);
 
     } catch (error) {
         let errorMessage = error.message;

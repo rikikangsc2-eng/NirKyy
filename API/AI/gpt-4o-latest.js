@@ -58,7 +58,7 @@ module.exports = async (req, res) => {
         'referer': 'https://toolbaz.com/'
       }
     });
-    res.succesJson(writingRes.data);
+    res.successJson(writingRes.data);
   } catch {
     res.errorJson({ error: "Request failed" });
   }

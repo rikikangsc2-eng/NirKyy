@@ -75,7 +75,7 @@ module.exports = async (req, res) => {
 
     const submitResponse = await axios.post('https://ngl.link/api/submit', payload.toString(), { headers: submitHeaders });
 
-    res.succesJson(submitResponse.data);
+    res.successJson(submitResponse.data);
 
   } catch (error) {
     let errorMessage = error.message;

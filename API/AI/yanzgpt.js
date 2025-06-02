@@ -57,7 +57,7 @@ module.exports = async (req, res) => {
             .replace(/\*\*/g, "*")
             .trim();
 
-        res.succesJson(cleanResponse);
+        res.successJson(cleanResponse);
 
     } catch (error) {
         if (error.response) {

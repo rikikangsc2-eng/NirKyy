@@ -24,7 +24,7 @@ module.exports = async (req, res) => {
     const randomIndex = Math.floor(Math.random() * quotes.length);
     const randomQuote = quotes[randomIndex];
 
-    res.succesJson(randomQuote);
+    res.successJson(randomQuote);
 
   } catch (error) {
     res.errorJson(error.message, 500);

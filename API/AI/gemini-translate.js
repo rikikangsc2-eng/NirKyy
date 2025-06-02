@@ -134,7 +134,7 @@ module.exports = async (req, res) => {
       return res.status(500).json({ error: 'Error communicating with the API.' });
     }
     const cleanedText = responseData.replace(/\[model: gemini-2\.0-flash\]\s*/g, '').trim();
-    res.succesJson(cleanedText);
+    res.successJson(cleanedText);
   } catch (error) {
     res.errorJson({ error: error.message });
   }

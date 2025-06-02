@@ -91,7 +91,7 @@ module.exports = async (req, res) => {
     if (!responseData) {
       return res.status(500).json({ error: 'Error communicating with the API.' });
     }
-    res.succesJson(responseData);
+    res.successJson(responseData);
   } catch (error) {
     res.errorJson({ error: error.message });
   }

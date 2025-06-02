@@ -57,7 +57,7 @@ module.exports = async (req, res) => {
       url: `https://www.youtube.com${item.url_suffix}`
     }));
 
-    res.succesJson(processedData);
+    res.successJson(processedData);
 
   } catch (error) {
     let errorMessage = error.message;

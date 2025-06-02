@@ -80,7 +80,7 @@ module.exports = async (req, res) => {
       
       const properlyEncodedUrl = `${urlObj.origin}${urlObj.pathname}?${encodedParams.toString()}`;
       
-      res.succesJson(properlyEncodedUrl);
+      res.successJson(properlyEncodedUrl);
     } else {
       res.errorJson('Gagal mendapatkan download Link');
     }

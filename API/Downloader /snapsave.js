@@ -36,7 +36,7 @@ const snapsave = async (req, res) => {
       return res.errorJson(medias);
     }
     
-    return res.succesJson({ platform, media: medias.result.media });
+    return res.successJson({ platform, media: medias.result.media });
     
   } catch (error) {
     return res.errorJson({ status: false, code: error.response?.status || 500, result: { error: error.message } });

@@ -41,7 +41,7 @@ module.exports = async (req, res) => {
 
     const encodedUrl = encodeURIComponent(videoUrl);
     const finalApi = `https://www.clipto.com/api/youtube/mp3?url=${encodedUrl}&csrfToken=${csrfToken}`;
-    res.succesJson(finalApi);
+    res.successJson(finalApi);
   } catch (err) {
     res.errorJson('Waduh, error pas ngakses API cuy', 500);
   }

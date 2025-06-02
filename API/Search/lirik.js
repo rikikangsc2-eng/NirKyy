@@ -25,7 +25,7 @@ module.exports = async (req, res) => {
         const lyricBody = lyricDiv.find('.lyric-body').text().trim();
 
         if (lyricBody) {
-            res.succesJson({ lyrics: lyricBody });
+            res.successJson({ lyrics: lyricBody });
         } else {
             res.errorJson({ error: 'Lirik tidak ditemukan.' }, 404);
         }

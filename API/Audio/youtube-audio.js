@@ -65,7 +65,7 @@ module.exports = async (req, res) => {
 
     const decodedUrl = Buffer.from(encodedUrl, 'base64').toString('utf-8');
 
-    res.succesJson({ decodedUrl, filename });
+    res.successJson({ decodedUrl, filename });
 
   } catch (error) {
     let errorMessage = error.message;

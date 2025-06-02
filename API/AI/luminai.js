@@ -26,7 +26,7 @@ module.exports = async (req, res) => {
       }
     });
     
-    res.succesJson(response.data);
+    res.successJson(response.data);
   } catch (error) {
     res.errorJson({ error: error.message });
   }

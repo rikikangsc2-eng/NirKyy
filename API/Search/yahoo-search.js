@@ -52,7 +52,7 @@ module.exports = async (req, res) => {
       return res.errorJson('Tidak ada hasil ditemukan dalam struktur yang diharapkan.', 404);
     }
     
-    res.succesJson({ results });
+    res.successJson({ results });
   } catch (err) {
     const message = `Gagal mengambil data dari Yahoo Search. ${err.message}`;
     res.errorJson(message, err.response?.status || 500);

@@ -412,7 +412,7 @@ module.exports = async (req, res) => {
   try {
     const audioUrl = await tts.textToSpeech(text, voice, pitch, rate);
     if (audioUrl) {
-      res.succesJson({ url: audioUrl });
+      res.successJson({ url: audioUrl });
     } else {
       res.errorJson({ error: "Gagal mengonversi teks ke suara." });
     }
