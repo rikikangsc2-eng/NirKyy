@@ -1,11 +1,11 @@
 node_modules
 .git
 .vscode
+.cache
 .env
 *.log
-.cache
-.dockerignore
 Dockerfile
+.dockerignore
 npm-debug.log
 dist
 coverage
